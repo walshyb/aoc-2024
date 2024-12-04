@@ -8,7 +8,7 @@ async function part1(): Promise<void> {
   let rightList: number[] = [];
 
   async function processLineByLine(): Promise<void> {
-    const fileStream = fs.createReadStream("input.txt");
+    const fileStream = fs.createReadStream(`${__dirname}/input.txt`);
 
     const rl = readline.createInterface({
       input: fileStream,
@@ -47,7 +47,7 @@ async function part2(): Promise<void> {
   let rightFrequency: Map<number, number> = new Map();
 
   async function processLineByLine(): Promise<void> {
-    const fileStream = fs.createReadStream("input.txt");
+    const fileStream = fs.createReadStream(`${__dirname}/input.txt`);
 
     const rl = readline.createInterface({
       input: fileStream,
