@@ -4,6 +4,6 @@ My solutions to this year's advent of code in JavaScript! Usually I do it in Pyt
 
 ## Running
 
-```JS
+```bash
 npx ts-node day1/script.ts
 ```
