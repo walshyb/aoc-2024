@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { processInput } from "../common/utils";
 
 async function part1(): Promise<void> {
