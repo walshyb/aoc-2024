@@ -1,30 +1,18 @@
 #!/usr/bin/env node
-
-import fs from "fs";
-import readline from "readline";
+import { processInput } from "../common/utils";
 
 async function part1(): Promise<void> {
   let leftList: number[] = [];
   let rightList: number[] = [];
 
-  async function processLineByLine(): Promise<void> {
-    const fileStream = fs.createReadStream(`${__dirname}/input.txt`);
+  function processLine(line: string): void {
+    const [left, right] = line.split("   ");
 
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
-    });
-
-    for await (const line of rl) {
-      const [left, right] = line.split("   ");
-
-      leftList.push(parseInt(left));
-      rightList.push(parseInt(right));
-    }
+    leftList.push(parseInt(left));
+    rightList.push(parseInt(right));
   }
-
   // Read input
-  await processLineByLine();
+  await processInput(`${__dirname}/input.txt`, processLine);
 
   // Sort input
   // Much faster to sort in min heap as we're reading input
@@ -46,28 +34,18 @@ async function part2(): Promise<void> {
   let leftList: number[] = [];
   let rightFrequency: Map<number, number> = new Map();
 
-  async function processLineByLine(): Promise<void> {
-    const fileStream = fs.createReadStream(`${__dirname}/input.txt`);
+  function processLine(line: string): void {
+    const [left, unparsedRight] = line.split("   ");
 
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
-    });
+    leftList.push(parseInt(left));
 
-    for await (const line of rl) {
-      const [left, unparsedRight] = line.split("   ");
+    const right: number = parseInt(unparsedRight);
+    const currentRightFreq: number = rightFrequency.get(right) || 0;
 
-      leftList.push(parseInt(left));
-
-      const right: number = parseInt(unparsedRight);
-      const currentRightFreq: number = rightFrequency.get(right) || 0;
-
-      rightFrequency.set(right, currentRightFreq + 1);
-    }
+    rightFrequency.set(right, currentRightFreq + 1);
   }
-
   // Read input
-  await processLineByLine();
+  await processInput(`${__dirname}/input.txt`, processLine);
 
   let similarities: number = 0;
 
