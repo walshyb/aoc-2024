@@ -21,7 +21,8 @@ async function part1(): Promise<void> {
     "9",
   ]);
 
-  const abs: any = {
+  // almost an ast
+  const ast: any = {
     m: {
       u: {
         l: {
@@ -39,12 +40,12 @@ async function part1(): Promise<void> {
     let op1: number = 0;
     let op2: number = 0;
     let i = 0;
-    let tree: any = { ...abs };
+    let tree: any = { ...ast };
     let currentToken = "";
     let previousToken = "";
 
     function reset(): void {
-      tree = { ...abs };
+      tree = { ...ast };
       currentToken = "";
       previousToken = "";
       op1 = 0;
