@@ -1,7 +1,6 @@
 import { processInput } from "../common/utils";
 
-async function part1(): Promise<void> {
-  let results: number = 0;
+async function run(partNumber: number): Promise<void> {
   const validTokens: Set<string> = new Set([
     "m",
     "u",
@@ -19,10 +18,31 @@ async function part1(): Promise<void> {
     "7",
     "8",
     "9",
+    "d",
+    "o",
+    "n",
+    "'",
+    "t",
   ]);
 
-  // almost an ast
+  // almost an ast? or maybe it's a real one :)
   const ast: any = {
+    d: {
+      o: {
+        "(": {
+          ")": {},
+        },
+        n: {
+          "'": {
+            t: {
+              "(": {
+                ")": {},
+              },
+            },
+          },
+        },
+      },
+    },
     m: {
       u: {
         l: {
@@ -36,13 +56,19 @@ async function part1(): Promise<void> {
     },
   };
 
+  // Define vars outside of processLine func
+  // bc we want to keep state (ignoring the index)
+  // throughout the line processing
+  let results: number = 0;
+  let op1: number = 0;
+  let op2: number = 0;
+  let tree: any = { ...ast };
+  let currentToken = "";
+  let previousToken = "";
+  let mulEnabled: boolean = true;
+
   function processLine(line: string): void {
-    let op1: number = 0;
-    let op2: number = 0;
     let i = 0;
-    let tree: any = { ...ast };
-    let currentToken = "";
-    let previousToken = "";
 
     function reset(): void {
       tree = { ...ast };
@@ -52,6 +78,11 @@ async function part1(): Promise<void> {
       op2 = 0;
     }
 
+    /**
+     * Move up to 3 characters forward and grab any numbers
+     *
+     * Set index to character immediately after last number found
+     */
     function getOperand(): number {
       let operand: string = "";
       let j = 1;
@@ -80,9 +111,25 @@ async function part1(): Promise<void> {
         continue;
       }
 
-      //console.log(char, tree);
-
+      /**
+       * Since we know the current character is valid, we walk it down our AST.
+       * i.e. if current char is "m" then set the current tree state to ast['m'],
+       * or if "u" then ast['m']['u'] (and so on). Visually: m->u->l->( .....
+       *
+       * If at any point the current character is not in the subtree, we "reset",
+       * or ignore everything we've seen up to that point and start checking over again
+       *
+       * We also keep track of the current instruction we're on: 'mul', 'do', or "don't"
+       *
+       * When we come across '(', or ',', then we check the next 3 chars for number operands
+       *
+       */
       switch (char) {
+        case "d":
+        case "o":
+        case "n":
+        case "'":
+        case "t":
         case "m":
         case "u":
         case "l":
@@ -90,7 +137,6 @@ async function part1(): Promise<void> {
             reset();
             break;
           }
-          previousToken = currentToken;
           currentToken = currentToken + char;
           tree = tree[char];
           break;
@@ -99,10 +145,9 @@ async function part1(): Promise<void> {
             reset();
             break;
           }
-          op1 = getOperand();
-          console.log("op1", op1);
-          previousToken = "(";
-          currentToken = "";
+          if (currentToken == "mul") {
+            op1 = getOperand();
+          }
           tree = tree["("];
           break;
         case ",":
@@ -111,17 +156,18 @@ async function part1(): Promise<void> {
             break;
           }
           op2 = getOperand();
-          console.log("op2", op2);
-          previousToken = ",";
-          currentToken = "";
           tree = tree[","];
           break;
         case ")":
           if (tree.hasOwnProperty(")")) {
-            results += op1 * op2;
+            if (partNumber == 1 || (currentToken === "mul" && mulEnabled)) {
+              results += op1 * op2;
+            } else if (currentToken === "do") {
+              mulEnabled = true;
+            } else if (currentToken == "don't") {
+              mulEnabled = false;
+            }
           }
-          reset();
-          break;
         default:
           reset();
           break;
@@ -130,10 +176,13 @@ async function part1(): Promise<void> {
       i += 1;
     }
   }
+
   // Read input
   await processInput(`${__dirname}/input.txt`, processLine);
 
-  console.log(`Part 1: ${results}`);
+  console.log(`Part ${partNumber}: ${results}`);
 }
 
-part1();
+run(1);
+
+run(2);
