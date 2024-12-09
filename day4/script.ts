@@ -1,5 +1,13 @@
 import { processInput } from "../common/utils";
 
+type Node = {
+  val: string | null;
+  i: number;
+  j: number;
+  running: string;
+  direction: number[];
+};
+
 async function part1(): Promise<void> {
   const grid: string[][] = [];
 
@@ -65,10 +73,7 @@ async function part1(): Promise<void> {
   while (nodes.length > 0) {
     // @ts-ignore
     const current: Node = nodes.pop();
-    const currentRow: number = current.i;
-    const currentCol: number = current.j;
-    const running: string = current.running;
-    const direction = current.direction;
+    const { i: currentRow, j: currentCol, running, direction } = current;
     const seenIndex = `${currentRow},${currentCol},${direction.toString()}`;
 
     if (seen.has(seenIndex)) {
@@ -85,11 +90,8 @@ async function part1(): Promise<void> {
     }
 
     if (!valid.has(running)) {
-      seen.add(seenIndex);
       continue;
     }
-
-    seen.add(seenIndex);
 
     if (!(direction[0] == 0 && direction[1] == 0)) {
       addNewNode(currentRow, currentCol, direction[0], direction[1], running);
@@ -110,12 +112,50 @@ async function part1(): Promise<void> {
   console.log(`Part 1: ${xmasCount}`);
 }
 
-type Node = {
-  val: string | null;
-  i: number;
-  j: number;
-  running: string;
-  direction: number[];
-};
+async function part2(): Promise<void> {
+  const grid: string[][] = [];
+
+  function processLine(line: string): void {
+    grid.push(line.split(""));
+  }
+
+  await processInput(`${__dirname}/input.txt`, processLine);
+
+  let xmasCount: number = 0;
+
+  for (let i = 1; i < grid.length - 1; i++) {
+    for (let j = 1; j < grid[0].length - 1; j++) {
+      const char: string = grid[i][j];
+
+      if (char != "A") continue;
+
+      const topLeft: string = grid[i - 1][j - 1];
+      const topRight: string = grid[i - 1][j + 1];
+      const botLeft: string = grid[i + 1][j - 1];
+      const botRight: string = grid[i + 1][j + 1];
+
+      if (
+        (topLeft == "M" &&
+          topRight == "M" &&
+          botLeft == "S" &&
+          botRight == "S") ||
+        (topLeft == "S" &&
+          topRight == "S" &&
+          botLeft == "M" &&
+          botRight == "M") ||
+        (topLeft == "M" &&
+          topRight == "S" &&
+          botLeft == "M" &&
+          botRight == "S") ||
+        (topLeft == "S" && topRight == "M" && botLeft == "S" && botRight == "M")
+      ) {
+        xmasCount++;
+      }
+    }
+  }
+
+  console.log(`Part 2: ${xmasCount}`);
+}
 
 part1();
+part2();
