@@ -56,9 +56,15 @@ async function part1(): Promise<void> {
         total: total * nextNumber,
       });
 
+      const mid = new Node({
+        index: nextIndex,
+        total: parseInt("" + total + nextNumber),
+      });
+
       if (index < nums.length) {
         nodesToSee.push(left);
         nodesToSee.push(right);
+        nodesToSee.push(mid);
       }
     }
   });
