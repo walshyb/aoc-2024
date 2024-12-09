@@ -16,28 +16,48 @@ async function part1(): Promise<void> {
       let spaceRepresentation: string;
 
       if (file) {
-        spaceRepresentation = fileCount.toString().repeat(value);
+        spaceRepresentation = ("" + fileCount + " ").repeat(value);
         fileCount++;
       } else {
-        spaceRepresentation = ".".repeat(value);
+        spaceRepresentation = ". ".repeat(value);
       }
 
       file = !file;
       memory += spaceRepresentation;
     }
 
+    if (memory[memory.length - 1] == " ") {
+      memory = memory.slice(0, -1);
+    }
+
+    //console.log(memory);
+    //console.log("===================");
+
     // Move files over left
+    memoryMap = memory.split(" ");
     let leftPointer = 0;
-    let rightPointer = memory.length - 1;
-    memoryMap = memory.split("");
+    let rightPointer = memoryMap.length - 1;
+
+    //console.log(memoryMap);
+    //console.log("===================");
 
     while (leftPointer < rightPointer) {
       while (memoryMap[leftPointer] != ".") {
         leftPointer++;
+        if (leftPointer >= memoryMap.length) {
+          break;
+        }
       }
 
       while (memoryMap[rightPointer] == ".") {
         rightPointer--;
+        if (rightPointer <= 0) {
+          break;
+        }
+      }
+
+      if (leftPointer >= rightPointer) {
+        break;
       }
 
       memoryMap[leftPointer] = memoryMap[rightPointer];
