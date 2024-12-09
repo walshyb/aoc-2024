@@ -3,7 +3,10 @@
     // these options are overrides used only by ts-node
     // same as the --compilerOptions flag and the TS_NODE_COMPILER_OPTIONS environment variable
     "compilerOptions": {
-      "module": "commonjs"
+      "target": "ES2024", // Specify the latest ECMAScript target
+      "lib": ["esnext"], // Include ECMAScript 2024 standard library
+      "module": "commonjs",
+      "moduleResolution": "Node"
     }
   }
 }
