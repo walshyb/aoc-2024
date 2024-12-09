@@ -1,5 +1,5 @@
-import fs from "fs";
-import readline from "readline";
+import * as fs from "fs";
+import * as readline from "readline";
 
 export async function processInput(
   path: string,
