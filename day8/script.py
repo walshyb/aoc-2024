@@ -79,34 +79,7 @@ for nodeName, coordinates_arr in nodes.items():
 
 print(antinodes)
 
-"""
-# Calculate location of antinodes
-# Loop through all node locations
-#   For each location,
-#       For each distance for current node
-#           Add up node location, plus every combination of distances
-#           i.e. (row+distance,col+distance), (row-distance,col-distance)
-#           Ignore any calculations that are out of bounds
-#           Add calculations to antinodes dict set
-for nodeName, coordinates_arr in nodes.items():
-    for i, coordinates_tuple in enumerate(coordinates_arr):
-        for distance_tuple in node_distances[nodeName]:
-            (node_row, node_col) = coordinates_tuple
-            (row_diff, col_diff) = distance_tuple
-
-            if inbounds(node_row - row_diff, node_col - col_diff):
-                grid[node_row - row_diff][node_col - col_diff] = "#"
-                antinodes[nodeName].add((node_row - row_diff, node_col - col_diff))
-
-            if inbounds(row_diff - node_row, col_diff - node_col):
-                grid[row_diff - node_row][col_diff - node_col] = "#"
-                antinodes[nodeName].add((row_diff - node_row, col_diff - node_col))
-"""
-
 for line in grid:
     print(line)
-
-# loop through grid
-# if
 
 # print("Part 1:" + str(result))
