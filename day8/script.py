@@ -1,6 +1,8 @@
 import os
 from collections import defaultdict
 
+# i did this one in python so i dont get TOO rusty
+
 
 def part1():
     # Read input
