@@ -14,8 +14,6 @@ def inbounds(row, col):
 
 
 # Part 1
-
-
 # node symbol -> coordinatees it appears
 nodes = defaultdict(set)
 
@@ -34,9 +32,6 @@ for line in lines:
 
     grid.append(row)
 
-for line in grid:
-    print(line)
-
 
 # antinode locations
 # node symbol -> set of tuples (coordinates)
@@ -49,8 +44,11 @@ node_distances = defaultdict(set)
 # calculate distances betweeen nodes
 # Loop through each node
 # Then compare distances between each set of 2 nodes
-# Save distances
-for nodeName, coordinates_arr in nodes.items():
+#   Substract row and col diffs from node 1
+#   Add diffs to node 2
+#   save as antinode If coordinatees unique, in bounds,
+#   and not already a node of the same name
+for node_name, coordinates_arr in nodes.items():
     for i, node1 in enumerate(coordinates_arr):
         for j, node2 in enumerate(coordinates_arr):
             if i == j:
@@ -67,19 +65,24 @@ for nodeName, coordinates_arr in nodes.items():
                 and (node1_row - row_diff, node1_col - col_diff) not in coordinates_arr
             ):
                 grid[node1_row - row_diff][node1_col - col_diff] = "#"
-                antinodes[nodeName].add((node1_row - row_diff, node1_col - col_diff))
+                antinodes[node_name].add((node1_row - row_diff, node1_col - col_diff))
 
             if (
                 inbounds(node2_row + row_diff, node2_col + col_diff)
                 and (node2_row + row_diff, node2_col + col_diff) not in coordinates_arr
             ):
                 grid[node2_row + row_diff][node2_col + col_diff] = "#"
-                antinodes[nodeName].add((node2_row + row_diff, node2_col + col_diff))
+                antinodes[node_name].add((node2_row + row_diff, node2_col + col_diff))
 
 
-print(antinodes)
+# for line in grid:
+#    print("".join(line))
 
-for line in grid:
-    print(line)
+final_set = set()
+for node_name, antinodes_set in antinodes.items():
+    final_set = final_set.union(antinodes_set)
 
-# print("Part 1:" + str(result))
+unique_antinodes = len(final_set)
+
+
+print("Part 1: " + str(unique_antinodes))
